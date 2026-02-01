@@ -22,79 +22,58 @@ export default function Header() {
 
     const isActive = (path: string) => pathname === path;
 
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
             <nav className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
-                <Link href="/" className="text-xl font-medium hover:text-accent transition-colors">
+                <Link href="/" className="text-xl font-medium hover:text-accent transition-colors z-50">
                     Grounded
                 </Link>
 
-                <div className="flex items-center space-x-8">
-                    <Link
-                        href="/locations"
-                        className={`text-sm transition-colors ${isActive('/locations') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'
-                            }`}
-                    >
-                        Locations
-                    </Link>
-                    <Link
-                        href="/models"
-                        className={`text-sm transition-colors ${isActive('/models') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'
-                            }`}
-                    >
-                        Models
-                    </Link>
-                    <Link
-                        href="/how-it-works"
-                        className={`text-sm transition-colors ${isActive('/how-it-works') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'
-                            }`}
-                    >
-                        How It Works
-                    </Link>
-                    <Link
-                        href="/faq"
-                        className={`text-sm transition-colors ${isActive('/faq') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'
-                            }`}
-                    >
-                        FAQ
-                    </Link>
-                    <Link
-                        href="/blog"
-                        className={`text-sm transition-colors ${isActive('/blog') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'
-                            }`}
-                    >
-                        Journal
-                    </Link>
+                {/* Desktop Nav */}
+                <div className="hidden md:flex items-center space-x-8">
+                    <Link href="/locations" className={`text-sm transition-colors ${isActive('/locations') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'}`}>Locations</Link>
+                    <Link href="/models" className={`text-sm transition-colors ${isActive('/models') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'}`}>Models</Link>
+                    <Link href="/how-it-works" className={`text-sm transition-colors ${isActive('/how-it-works') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'}`}>How It Works</Link>
+                    <Link href="/faq" className={`text-sm transition-colors ${isActive('/faq') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'}`}>FAQ</Link>
+                    <Link href="/blog" className={`text-sm transition-colors ${isActive('/blog') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'}`}>Journal</Link>
+
+                    {!loading && user && (
+                        <Link href="/admin" className="text-sm text-foreground/60 hover:text-accent transition-colors">Dashboard</Link>
+                    )}
+
                     <Link
                         href="/waitlist"
-                        className={`px-4 py-2 border border-accent transition-colors ${isActive('/waitlist')
-                            ? 'bg-accent text-foreground'
-                            : 'text-foreground hover:bg-accent/10'
-                            }`}
+                        className={`px-4 py-2 border border-accent transition-colors ${isActive('/waitlist') ? 'bg-accent text-foreground' : 'text-foreground hover:bg-accent/10'}`}
                     >
                         Waitlist
                     </Link>
-
-                    {!loading && (
-                        <>
-                            {user ? (
-                                <Link
-                                    href="/admin"
-                                    className="text-sm text-foreground/60 hover:text-accent transition-colors"
-                                >
-                                    Dashboard
-                                </Link>
-                            ) : (
-                                <Link
-                                    href="/login"
-                                    className="text-sm text-foreground/60 hover:text-accent transition-colors"
-                                >
-                                    Login
-                                </Link>
-                            )}
-                        </>
-                    )}
                 </div>
+
+                {/* Mobile Menu Button */}
+                <button
+                    className="md:hidden z-50 p-2 text-foreground"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                    {mobileMenuOpen ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    )}
+                </button>
+
+                {/* Mobile Nav Overlay */}
+                {mobileMenuOpen && (
+                    <div className="fixed inset-0 bg-background/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center space-y-8 md:hidden">
+                        <Link href="/locations" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-light hover:text-accent">Locations</Link>
+                        <Link href="/models" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-light hover:text-accent">Models</Link>
+                        <Link href="/how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-light hover:text-accent">How It Works</Link>
+                        <Link href="/faq" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-light hover:text-accent">FAQ</Link>
+                        <Link href="/blog" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-light hover:text-accent">Journal</Link>
+                        <Link href="/waitlist" onClick={() => setMobileMenuOpen(false)} className="px-8 py-3 bg-accent text-foreground text-xl">Waitlist</Link>
+                    </div>
+                )}
             </nav>
         </header>
     );

@@ -35,7 +35,7 @@ export default function Home() {
                 >
                     <div className="absolute inset-0 bg-black/40 z-10" />
                     <Image
-                        src="/images/landscape_desert_sunset_1769886275077.png"
+                        src="/premium_desert_hero_1769977835499.png"
                         alt="Mexican High Desert"
                         fill
                         className="object-cover"
@@ -127,7 +127,7 @@ export default function Home() {
                     <div className="order-2 md:order-1 relative aspect-[4/3] rounded-lg overflow-hidden shadow-2xl border border-white/10">
                         {/* Use generated Truck Image */}
                         <Image
-                            src="/transport_truck_view_1769905418815.png"
+                            src="/logistics_truck_desert_1769977848559.png"
                             alt="Modular Unit Transport"
                             fill
                             className="object-cover hover:scale-105 transition-transform duration-700"
@@ -164,7 +164,7 @@ export default function Home() {
                 <div className="absolute inset-0 z-0 opacity-80">
                     {/* Use generated Settlement Image */}
                     <Image
-                        src="/settlement_aerial_view_1769905405358.png"
+                        src="/settlement_aerial_forest_1769977872697.png"
                         alt="Grounded Settlement Vision"
                         fill
                         className="object-cover"
