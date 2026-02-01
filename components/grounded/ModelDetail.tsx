@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import ROICalculator from './ROICalculator';
 
@@ -28,7 +29,16 @@ export default function ModelDetail({ model }: { model: HouseModel }) {
         return '/images/models_floorplan_a_1769886179707.png';
     };
 
+    const getFallbackImages = (name: string) => {
+        if (name.includes('Model A')) return ['/images/models/model_a_exterior_1769883040320.png', '/images/models/model_a_interior_1769883053783.png'];
+        if (name.includes('Model B')) return ['/images/models/model_b_exterior_1769883069908.png', '/images/models/model_b_interior_1769883084425.png'];
+        if (name.includes('Model C')) return ['/images/models/model_c_exterior_1769883099326.png', '/images/models/model_c_interior_1769883111015.png'];
+        if (name.includes('Model D')) return ['/images/models/model_d_exterior_1769883126934.png', '/images/models/model_d_interior_1769883142529.png'];
+        return [];
+    };
+
     const floorPlan = getFloorPlan(model.name);
+    const displayImages = (model.images && model.images.length > 0) ? model.images : getFallbackImages(model.name);
 
     return (
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 min-h-[80vh]">
@@ -36,17 +46,17 @@ export default function ModelDetail({ model }: { model: HouseModel }) {
             <div className="lg:col-span-7 space-y-8">
                 {/* Main Hero Image */}
                 <div className="aspect-[4/3] relative bg-neutral-900 overflow-hidden rounded-sm group">
-                    {model.images && model.images[0] ? (
-                        <Image src={model.images[0]} alt={model.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
+                    {displayImages[0] ? (
+                        <Image src={displayImages[0]} alt={model.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-white/20">No Image</div>
                     )}
                 </div>
 
                 {/* Secondary Images (Interior/Detail) */}
-                {model.images && model.images[1] && (
+                {displayImages[1] && (
                     <div className="aspect-[16/9] relative bg-neutral-900 overflow-hidden rounded-sm group">
-                        <Image src={model.images[1]} alt={model.name + " Interior"} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        <Image src={displayImages[1]} alt={model.name + " Interior"} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
                     </div>
                 )}
 
@@ -164,9 +174,12 @@ export default function ModelDetail({ model }: { model: HouseModel }) {
                     <ROICalculator basePrice={model.price_usd_min} />
 
                     <div className="space-y-4 pt-6">
-                        <button className="w-full py-5 bg-foreground text-background text-lg uppercase tracking-widest hover:bg-white/90 transition-colors">
+                        <Link
+                            href={`/reservation?model_id=${model.id}`}
+                            className="block w-full text-center py-5 bg-foreground text-background text-lg uppercase tracking-widest hover:bg-white/90 transition-colors"
+                        >
                             Reserve Now
-                        </button>
+                        </Link>
                         <p className="text-xs text-center text-foreground/30">
                             $1,000 refundable deposit secures your production slot.
                         </p>

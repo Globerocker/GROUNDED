@@ -59,10 +59,17 @@ export default function Header() {
                         FAQ
                     </Link>
                     <Link
+                        href="/blog"
+                        className={`text-sm transition-colors ${isActive('/blog') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'
+                            }`}
+                    >
+                        Journal
+                    </Link>
+                    <Link
                         href="/waitlist"
                         className={`px-4 py-2 border border-accent transition-colors ${isActive('/waitlist')
-                                ? 'bg-accent text-foreground'
-                                : 'text-foreground hover:bg-accent/10'
+                            ? 'bg-accent text-foreground'
+                            : 'text-foreground hover:bg-accent/10'
                             }`}
                     >
                         Waitlist

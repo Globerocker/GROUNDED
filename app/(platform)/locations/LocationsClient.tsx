@@ -29,7 +29,18 @@ interface LocationsPageProps {
     locations: Location[];
 }
 
-export default function LocationsClient({ locations }: LocationsPageProps) {
+export default function LocationsClient({ locations: initialLocations }: LocationsPageProps) {
+    // Enrich locations with mock data for "Million Dollar" feel
+    const locations = initialLocations.map(loc => ({
+        ...loc,
+        average_temp: loc.name.includes('Queretaro') ? '22°C' :
+            loc.name.includes('Merida') ? '28°C' :
+                loc.name.includes('Puebla') ? '20°C' :
+                    loc.name.includes('Guadalajara') ? '24°C' : '23°C',
+        direct_flights: loc.name.includes('Queretaro') ? ['IAH', 'DFW', 'ORD'] :
+            loc.name.includes('Merida') ? ['MIA', 'IAH', 'YYZ'] :
+                loc.name.includes('Guadalajara') ? ['LAX', 'PHX', 'JFK'] : ['MEX', 'IAH']
+    }));
     const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
     const [plots, setPlots] = useState<Plot[]>([]);
     const [loading, setLoading] = useState(false);
