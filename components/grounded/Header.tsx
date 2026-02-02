@@ -38,6 +38,7 @@ export default function Header() {
                     <Link href="/how-it-works" className={`text-sm transition-colors ${isActive('/how-it-works') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'}`}>How It Works</Link>
                     <Link href="/faq" className={`text-sm transition-colors ${isActive('/faq') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'}`}>FAQ</Link>
                     <Link href="/blog" className={`text-sm transition-colors ${isActive('/blog') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'}`}>Journal</Link>
+                    <Link href="/contact" className={`text-sm transition-colors ${isActive('/contact') ? 'text-accent' : 'text-foreground/80 hover:text-foreground'}`}>Contact</Link>
 
                     {!loading && user && (
                         <Link href="/admin" className="text-sm text-foreground/60 hover:text-accent transition-colors">Dashboard</Link>
@@ -71,6 +72,7 @@ export default function Header() {
                         <Link href="/how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-light hover:text-accent">How It Works</Link>
                         <Link href="/faq" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-light hover:text-accent">FAQ</Link>
                         <Link href="/blog" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-light hover:text-accent">Journal</Link>
+                        <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-light hover:text-accent">Contact</Link>
                         <Link href="/waitlist" onClick={() => setMobileMenuOpen(false)} className="px-8 py-3 bg-accent text-foreground text-xl">Waitlist</Link>
                     </div>
                 )}

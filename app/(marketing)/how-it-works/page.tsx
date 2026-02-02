@@ -1,202 +1,128 @@
+import { MapPin, Home, FileCheck, Truck, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
+
 export default function HowItWorksPage() {
+    const steps = [
+        {
+            id: 1,
+            title: "Select Location",
+            desc: "Browse our network of vetted land partners. Every site is pre-approved for modular deployment, with soil tests and access roads already in place.",
+            icon: MapPin,
+            color: "text-blue-400"
+        },
+        {
+            id: 2,
+            title: "Configure Model",
+            desc: "Choose from our four base models (28-80m²). Add off-grid packages like solar carports, Starlink, or water catchment systems.",
+            icon: Home,
+            color: "text-orange-400"
+        },
+        {
+            id: 3,
+            title: "Reserve & Contract",
+            desc: "Secure your production slot with a deposit. We handle the permitting and land-use agreements directly with the local municipality.",
+            icon: FileCheck,
+            color: "text-green-400"
+        },
+        {
+            id: 4,
+            title: "Construction & Delivery",
+            desc: "Your unit is built in our controlled factory environment. We transport it to site and install it on screw piles in just 3-5 days.",
+            icon: Truck,
+            color: "text-yellow-400"
+        }
+    ];
+
     return (
-        <main className="min-h-screen px-8 py-16">
-            <div className="max-w-4xl mx-auto space-y-16">
-                <div className="space-y-4">
-                    <h1>How It Works</h1>
-                    <p className="text-xl text-foreground/80">
-                        From selection to ownership in four steps.
+        <main className="min-h-screen bg-background text-foreground pt-32 pb-24 px-6 md:px-12">
+            <div className="max-w-6xl mx-auto space-y-24">
+                {/* Header */}
+                <div className="text-center space-y-6 max-w-3xl mx-auto">
+                    <h1 className="text-5xl md:text-6xl font-light tracking-tight">
+                        Seamless <span className="text-accent italic">Deployment</span>.
+                    </h1>
+                    <p className="text-xl text-foreground/70">
+                        We have removed the headache of traditional construction.
+                        No architects, no contractors, no delays. Just pick a spot and plug in.
                     </p>
                 </div>
 
-                {/* Process Steps */}
-                <section className="space-y-8">
+                {/* Steps Timeline */}
+                <div className="relative">
+                    {/* Connecting Line (Desktop) */}
+                    <div className="hidden md:block absolute top-12 left-0 right-0 h-0.5 bg-gradient-to-r from-accent/0 via-accent/50 to-accent/0" />
+
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+                        {steps.map((step) => (
+                            <div key={step.id} className="relative group">
+                                <div className="hidden md:flex items-center justify-center w-24 h-24 bg-neutral-900 border border-border rounded-full mx-auto mb-8 relative z-10 group-hover:border-accent transition-colors">
+                                    <step.icon className={`w-10 h-10 ${step.color}`} />
+                                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-accent text-neutral-900 rounded-full flex items-center justify-center font-bold text-sm">
+                                        {step.id}
+                                    </div>
+                                </div>
+
+                                {/* Mobile Layout */}
+                                <div className="md:hidden flex items-center space-x-4 mb-4">
+                                    <div className="flex items-center justify-center w-16 h-16 bg-neutral-900 border border-border rounded-full shrink-0">
+                                        <step.icon className={`w-6 h-6 ${step.color}`} />
+                                    </div>
+                                    <h3 className="text-2xl font-medium">{step.title}</h3>
+                                </div>
+
+                                <div className="text-center md:text-center pl-20 md:pl-0">
+                                    <h3 className="hidden md:block text-2xl font-medium mb-4">{step.title}</h3>
+                                    <p className="text-foreground/70 leading-relaxed">{step.desc}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Detailed Breakdown */}
+                <div className="grid md:grid-cols-2 gap-12 pt-12 border-t border-white/5">
                     <div className="space-y-6">
-                        <div className="border-l-2 border-accent pl-6 space-y-3">
-                            <div className="text-sm text-foreground/60">Step 1</div>
-                            <h2 className="text-2xl">Select Location</h2>
-                            <p className="text-foreground/80">
-                                Browse available locations on our interactive map. Each location is within 60 minutes of an international airport and has verified infrastructure access.
-                            </p>
-                            <p className="text-foreground/80">
-                                View plot availability, yearly usage fees, and proximity to transportation corridors.
-                            </p>
-                        </div>
-
-                        <div className="border-l-2 border-accent pl-6 space-y-3">
-                            <div className="text-sm text-foreground/60">Step 2</div>
-                            <h2 className="text-2xl">Choose House Model</h2>
-                            <p className="text-foreground/80">
-                                Select from four modular housing models ranging from 28 to 80 square meters. All models use concrete, steel, and wood construction.
-                            </p>
-                            <p className="text-foreground/80">
-                                Optional infrastructure add-ons: solar carport, water catchment, storage, internet.
-                            </p>
-                        </div>
-
-                        <div className="border-l-2 border-accent pl-6 space-y-3">
-                            <div className="text-sm text-foreground/60">Step 3</div>
-                            <h2 className="text-2xl">Reserve & Contract</h2>
-                            <p className="text-foreground/80">
-                                Submit reservation through the platform. We verify plot availability and send contract documentation within 5 business days.
-                            </p>
-                            <p className="text-foreground/80">
-                                Review contract terms, consult legal counsel if needed, execute agreement.
-                            </p>
-                        </div>
-
-                        <div className="border-l-2 border-accent pl-6 space-y-3">
-                            <div className="text-sm text-foreground/60">Step 4</div>
-                            <h2 className="text-2xl">Construction & Delivery</h2>
-                            <p className="text-foreground/80">
-                                Units are manufactured off-site and delivered for installation. Timeline: 8-12 weeks from contract execution to completion.
-                            </p>
-                            <p className="text-foreground/80">
-                                Final inspection, handover, access credentials provided.
-                            </p>
-                        </div>
+                        <h2 className="text-3xl font-light">What's Included?</h2>
+                        <ul className="space-y-4">
+                            {[
+                                "Structural engineering & architectural plans",
+                                "Permitting & land-use compliance handling",
+                                "Site preparation (grading & screw piles)",
+                                "Transportation to site (up to 500km)",
+                                "Crane installation & leveling",
+                                "Utility connection & system commissioning"
+                            ].map((item, i) => (
+                                <li key={i} className="flex items-center space-x-3 text-foreground/80">
+                                    <CheckCircle size={20} className="text-accent shrink-0" />
+                                    <span>{item}</span>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-                </section>
 
-                {/* Ownership Model */}
-                <section className="space-y-6">
-                    <h2 className="text-3xl">Ownership Structure</h2>
-                    <div className="space-y-4 text-foreground/80 leading-relaxed">
-                        <p>
-                            Grounded operates on a separation between asset ownership and land access:
+                    <div className="bg-white/5 rounded-2xl p-8 border border-white/10 space-y-6">
+                        <h3 className="text-xl font-medium">Timeline Guarantee</h3>
+                        <p className="text-foreground/70">
+                            Because we build in a controlled factory environment, we are not subject to weather delays or labor shortages.
                         </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="p-6 border border-accent bg-accent/5">
-                                <h3 className="font-medium mb-2">One-Time Purchase</h3>
-                                <p className="text-sm">
-                                    You own the modular housing unit. This is your permanent asset.
-                                </p>
-                                <p className="text-sm mt-2 text-foreground/60">
-                                    $22,000 - $70,000 depending on model
-                                </p>
-                            </div>
-                            <div className="p-6 border border-border">
-                                <h3 className="font-medium mb-2">Yearly Land Usage Fee</h3>
-                                <p className="text-sm">
-                                    Secures your right to maintain the unit on the designated plot.
-                                </p>
-                                <p className="text-sm mt-2 text-foreground/60">
-                                    $750 - $1,500/year depending on location
-                                </p>
-                            </div>
+                        <div className="flex justify-between items-end border-b border-white/10 pb-2">
+                            <span className="text-sm uppercase tracking-widest text-foreground/60">Typical Build Time</span>
+                            <span className="text-2xl font-light text-accent">8 Weeks</span>
                         </div>
-                        <p className="text-sm p-4 border border-border">
-                            For detailed legal structure: <a href="/ownership-model" className="underline hover:text-accent">Ownership Model</a>
-                        </p>
+                        <div className="flex justify-between items-end border-b border-white/10 pb-2">
+                            <span className="text-sm uppercase tracking-widest text-foreground/60">Installation Time</span>
+                            <span className="text-2xl font-light text-accent">3 Days</span>
+                        </div>
                     </div>
-                </section>
+                </div>
 
-                {/* Timeline */}
-                <section className="space-y-6">
-                    <h2 className="text-3xl">Expected Timeline</h2>
-                    <div className="space-y-3">
-                        <div className="flex justify-between p-4 border border-border">
-                            <span className="text-foreground/80">Reservation to Contract</span>
-                            <span className="font-medium">5 business days</span>
-                        </div>
-                        <div className="flex justify-between p-4 border border-border">
-                            <span className="text-foreground/80">Contract to Payment</span>
-                            <span className="font-medium">7-14 days</span>
-                        </div>
-                        <div className="flex justify-between p-4 border border-border">
-                            <span className="text-foreground/80">Payment to Manufacturing Start</span>
-                            <span className="font-medium">2-3 days</span>
-                        </div>
-                        <div className="flex justify-between p-4 border border-border">
-                            <span className="text-foreground/80">Manufacturing to Installation</span>
-                            <span className="font-medium">6-10 weeks</span>
-                        </div>
-                        <div className="flex justify-between p-4 border border-border">
-                            <span className="text-foreground/80">Installation to Completion</span>
-                            <span className="font-medium">3-7 days</span>
-                        </div>
-                    </div>
-                    <p className="text-sm text-foreground/60">
-                        Total: approximately 8-12 weeks from contract to habitable unit.
-                    </p>
-                </section>
-
-                {/* Payments */}
-                <section className="space-y-6">
-                    <h2 className="text-3xl">Payment Structure</h2>
-                    <div className="space-y-4 text-foreground/80 leading-relaxed">
-                        <div className="p-6 border border-border space-y-3">
-                            <h3 className="font-medium">Initial Payment (50%)</h3>
-                            <p className="text-sm">
-                                Due at contract execution. Covers manufacturing and materials.
-                            </p>
-                        </div>
-                        <div className="p-6 border border-border space-y-3">
-                            <h3 className="font-medium">Final Payment (50%)</h3>
-                            <p className="text-sm">
-                                Due before installation begins. Covers delivery and on-site assembly.
-                            </p>
-                        </div>
-                        <div className="p-6 border border-border space-y-3">
-                            <h3 className="font-medium">Yearly Land Usage Fee</h3>
-                            <p className="text-sm">
-                                Billed annually. Due 30 days before anniversary of contract execution.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* FAQs Snippet */}
-                <section className="space-y-4">
-                    <h2 className="text-3xl">Common Questions</h2>
-                    <div className="space-y-3">
-                        <details className="p-4 border border-border">
-                            <summary className="cursor-pointer font-medium">
-                                Can I visit the location before purchasing?
-                            </summary>
-                            <p className="mt-3 text-foreground/80">
-                                Yes. Contact us to arrange site visits. Travel and accommodation are at your own expense.
-                            </p>
-                        </details>
-                        <details className="p-4 border border-border">
-                            <summary className="cursor-pointer font-medium">
-                                What if I don't pay the yearly fee?
-                            </summary>
-                            <p className="mt-3 text-foreground/80">
-                                Failure to pay yearly fees results in loss of land access rights. The unit remains your property but must be removed from the plot.
-                            </p>
-                        </details>
-                        <details className="p-4 border border-border">
-                            <summary className="cursor-pointer font-medium">
-                                Can I rent out my unit?
-                            </summary>
-                            <p className="mt-3 text-foreground/80">
-                                Subject to landholder approval. Most locations permit short-term rental with restrictions.
-                            </p>
-                        </details>
-                    </div>
-                    <a href="/faq" className="inline-block mt-4 underline text-accent hover:text-foreground">
-                        View All FAQs →
-                    </a>
-                </section>
-
-                <section className="space-y-4 pt-8 border-t border-border">
-                    <h2 className="text-2xl">Ready to proceed?</h2>
-                    <div className="flex flex-wrap gap-4">
-                        <a
-                            href="/locations"
-                            className="px-6 py-3 bg-accent text-foreground hover:bg-accent/90 transition-colors"
-                        >
-                            View Locations
-                        </a>
-                        <a
-                            href="/waitlist"
-                            className="px-6 py-3 border border-accent text-foreground hover:bg-accent/10 transition-colors"
-                        >
-                            Join Waitlist
-                        </a>
-                    </div>
-                </section>
+                {/* CTA */}
+                <div className="text-center pt-12">
+                    <Link href="/locations" className="inline-flex items-center space-x-2 px-8 py-4 bg-accent text-foreground font-medium rounded-full hover:bg-accent/90 transition-colors">
+                        <span>Find Your Location</span>
+                        <MapPin size={18} />
+                    </Link>
+                </div>
             </div>
         </main>
     );

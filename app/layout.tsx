@@ -3,14 +3,37 @@ import { Inter, Outfit } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/grounded/Header'
 import Footer from '@/components/grounded/Footer'
-import WhatsAppButton from '@/components/ui/WhatsAppButton'
+
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' })
 
 export const metadata: Metadata = {
-    title: 'Grounded | Autonomous Living Infrastructure',
-    description: 'Prefabricated, self-sustaining homes for the next generation of living.',
+    title: {
+        template: '%s | Grounded',
+        default: 'Grounded | The Hardware of Living',
+    },
+    description: 'Autonomous living infrastructure for the sovereign individual. Precision-engineered, off-grid, and globally deployable.',
+    keywords: ['prefab homes', 'off-grid living', 'autonomous housing', 'modern architecture', 'luxury cabin'],
+    openGraph: {
+        type: 'website',
+        locale: 'en_US',
+        url: 'https://grounded-living.com',
+        siteName: 'Grounded',
+        images: [
+            {
+                url: '/settlement_aerial_forest_1769977872697.png',
+                width: 1200,
+                height: 630,
+                alt: 'Grounded Settlement',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        site: '@grounded_living',
+        creator: '@grounded_living',
+    },
 }
 
 export default function RootLayout({
@@ -27,7 +50,6 @@ export default function RootLayout({
                 {children}
                 {modal}
                 <Footer />
-                <WhatsAppButton />
             </body>
         </html>
     )

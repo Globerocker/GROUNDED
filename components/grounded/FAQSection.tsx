@@ -6,41 +6,49 @@ import { Plus, Minus } from 'lucide-react';
 
 const faqs = [
     {
-        category: "General",
+        category: "Ownership & Asset",
         items: [
             {
-                q: "Do I own the land?",
-                a: "If you purchase a unit for your own land, yes. If you join our network as a partner, you retain land ownership while we manage the asset. For travelers/renters, you simply book a stay."
+                q: "What does 'Autonomous Living Infrastructure' actually mean?",
+                a: "It means true independence without sacrificing luxury. Every Grounded unit is a self-contained ecosystem. We integrate hospital-grade water filtration, 15kWh+ solar energy storage, and satellite connectivity directly into the chassis. You physically do not need to connect to a municipal grid to live comfortably. This unlocks land that was previously undevelopable—mountain peaks, desert canyons, and remote coastlines—turning zero-value land into premium real estate."
             },
             {
-                q: "Is it truly off-grid?",
-                a: "Yes. Every unit comes standard with a 15kWh solar array, 30kWh LiFePO4 battery storage, and 3000L water catchment/filtration system. You can connect to utilities if desired, but it's not required."
+                q: "Do I own the land or just the unit?",
+                a: "You own the asset. If you deploy a Grounded unit on your own property, you own 100% of the vertical and horizontal equity. If you join our 'Grounded Network' as a land partner, you retain title to your land while we deploy units at our cost, sharing the booking revenue with you. For buyers looking for investment capability without land management, we offer fractionalized ownership in our managed resort locations."
+            },
+            {
+                q: "How does the reservation and delivery process work?",
+                a: "Reservation secures your production slot with a fully refundable deposit. Once reserved, you'll be assigned a dedicated Deployment Manager who handles site assessment, permitting, and logistics. Our 'White Glove' delivery service includes site preparation (screw pile foundation), crane installation, and system commissioning. From reservation to keys-in-hand, the timeline is typically 12-16 weeks."
             }
         ]
     },
     {
-        category: "Technical",
+        category: "Technology & Specs",
         items: [
             {
-                q: "How does waste management work?",
-                a: "We use advanced incineration or composting toilets depending on the model, along with greywater recycling for irrigation. Zero blackwater discharge options are available for sensitive ecosystems."
+                q: "Can I truly live off-grid indefinitely?",
+                a: "Yes. The system is designed for 99.9% uptime. Our solar arrays are oversized relative to load, paired with massive 30kWh LiFePO4 battery banks (expandable). Water is harvested from rain or delivered via truck to the 3000L internal cisterns, then purified through a 3-stage UV and reverse osmosis system. You have the power of a suburban home in the middle of nowhere."
             },
             {
-                q: "What about internet?",
-                a: "All units are pre-wired for Starlink. We offer a 'Digital Nomad' package that includes the hardware and mesh network setup for 200Mbps+ speeds anywhere on the planet."
+                q: "How do you handle waste and sewage?",
+                a: "We use a proprietary hidden incineration system ('Cinderella' technology) that reduces organic waste to sterile ash—maintenance is as simple as emptying a tray once a week. For greywater (showers/sinks), we employ a biological filtration planter technique that safely recycles water back into the immediate landscape, actually improving the local soil microbiome."
+            },
+            {
+                q: "Is it suitable for extreme climates?",
+                a: "Absolutely. The localized production allows us to adapt insulation ratings. Our 'Nordic' package features R-40 insulation and triple-glazed windows for arctic conditions, while our 'Equator' package optimizes airflow and passive cooling. The steel exoskeleton is rated for 150mph hurricane winds and high seismic activity."
             }
         ]
     },
     {
-        category: "Financial",
+        category: "Financials",
         items: [
             {
-                q: "Can I finance the unit?",
-                a: "We offer in-house financing for up to 50% of the unit cost for qualified buyers. We also partner with sustainable lending institutions for land+unit packages."
+                q: " What is the expected ROI for rental units?",
+                a: "Because Grounded units can be placed in unique, high-demand locations that traditional hotels cannot reach, they command significant premiums. Our network averages an ADR (Average Daily Rate) of $350-$800 depending on location. With lower operating costs (no utility bills), net yields often exceed 15-20% annually. Use our ROI Calculator to model your specific scenario."
             },
             {
-                q: "What is the warranty?",
-                a: "We offer a 10-year structural warranty on the steel chassis and shell, and a 2-year comprehensive warranty on all internal systems and finishes."
+                q: "Do you offer financing?",
+                a: "We have partnered with forward-thinking lenders who understand that the future of real estate is modular and sustainable. We offer terms up to 20 years with as little as 20% down for qualified buyers. We also accept crypto settlements for full asset purchases."
             }
         ]
     }

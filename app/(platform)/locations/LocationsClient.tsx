@@ -191,9 +191,18 @@ export default function LocationsClient({ locations: initialLocations }: Locatio
                                                         <div className="w-2 h-2 rounded-full bg-emerald-500" />
                                                         <span className="font-medium">Plot {plot.plot_number}</span>
                                                     </div>
-                                                    <div className="text-right">
-                                                        <div className="text-sm">${plot.yearly_fee_usd.toLocaleString()}</div>
-                                                        <div className="text-[10px] text-foreground/50">{plot.size_sqm} sqm</div>
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="text-right">
+                                                            <div className="text-sm">${plot.yearly_fee_usd.toLocaleString()}</div>
+                                                            <div className="text-[10px] text-foreground/50">{plot.size_sqm} sqm</div>
+                                                        </div>
+                                                        <a
+                                                            href={`/reservation?plot_id=${plot.id}`}
+                                                            className="px-3 py-1 bg-accent text-black text-xs font-bold uppercase tracking-wider hover:bg-white transition-colors"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        >
+                                                            Reserve
+                                                        </a>
                                                     </div>
                                                 </div>
                                             )) : (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
@@ -25,14 +25,14 @@ interface HouseModel {
     name: string;
     price_usd_min: number;
     price_usd_max: number;
+    size_sqm_min: number;
+    bedrooms: number;
+    images: string[];
 }
-
-import { Suspense } from 'react';
 
 function ReservationContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    // ... existing logic ...
     const plot_id = searchParams.get('plot_id');
     const model_id = searchParams.get('model_id');
 
@@ -42,6 +42,11 @@ function ReservationContent() {
     const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -91,7 +96,7 @@ function ReservationContent() {
     };
 
     const calculateTotal = () => {
-        const housePrice = model ? (model.price_usd_min + model.price_usd_max) / 2 : 0;
+        const housePrice = model ? model.price_usd_min : 0;
         const addonsTotal = addons
             .filter((a) => selectedAddons.has(a.id))
             .reduce((sum, a) => sum + a.price_usd, 0);
@@ -127,109 +132,180 @@ function ReservationContent() {
         }
     };
 
-    if (loading) {
+    // Placeholder image logic
+    const getModelImage = (model: HouseModel) => {
+        if (model.images && model.images.length > 0) return model.images[0];
+        // Use placeholders if no DB images
+        if (model.name.includes('Model A')) return '/images/models/model_a_exterior_1769883040320.png';
+        if (model.name.includes('Model B')) return '/images/models/model_b_exterior_1769883069908.png';
+        if (model.name.includes('Model C')) return '/images/models/model_c_exterior_1769883099326.png';
+        if (model.name.includes('Model D')) return '/images/models/model_d_exterior_1769883126934.png';
+        return null;
+    };
+
+
+    if (!mounted || loading) {
         return (
-            <main className="min-h-screen px-8 py-16">
-                <div className="max-w-4xl mx-auto">
-                    <p className="text-foreground/60">Loading...</p>
+            <main className="min-h-screen px-8 py-24 flex items-center justify-center bg-neutral-950 text-white">
+                <div className="text-center space-y-4">
+                    <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
+                    <p className="text-foreground/60 text-sm tracking-widest uppercase">Initializing Reservation...</p>
                 </div>
             </main>
         );
     }
 
     return (
-        <main className="min-h-screen px-8 py-16">
-            <div className="max-w-4xl mx-auto space-y-12">
-                <h1>Reservation summary</h1>
+        <main className="min-h-screen pt-24 pb-16 px-6 md:px-12 bg-neutral-950 text-white">
+            <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-24">
 
-                {/* Selected plot */}
-                {plot && (
-                    <div className="space-y-3">
-                        <h2 className="text-lg text-foreground/60">Plot</h2>
-                        <div className="p-6 border border-border space-y-2">
-                            <div className="flex justify-between">
-                                <span>{plot.location.name}</span>
-                                <span className="text-foreground/60">{plot.plot_number}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-foreground/60">Yearly usage fee</span>
-                                <span>${plot.yearly_fee_usd.toLocaleString()}</span>
-                            </div>
-                        </div>
+                {/* LEFT COL: Configuration & Selection */}
+                <div className="space-y-12">
+                    <div>
+                        <h1 className="text-3xl font-light mb-2">Finalize your Build</h1>
+                        <p className="text-foreground/60">Review your configuration and secure your production slot with a refundable deposit.</p>
                     </div>
-                )}
 
-                {/* Selected model */}
-                {model && (
-                    <div className="space-y-3">
-                        <h2 className="text-lg text-foreground/60">House model</h2>
-                        <div className="p-6 border border-border space-y-2">
-                            <div className="flex justify-between">
-                                <span>{model.name}</span>
+                    {/* Empty State Prompt */}
+                    {!loading && !model && !plot && (
+                        <div className="p-8 border border-white/10 bg-white/5 rounded-sm text-center space-y-6">
+                            <p className="text-foreground/80">You haven't selected a model or location yet.</p>
+                            <div className="flex flex-col gap-4">
+                                <button onClick={() => router.push('/models')} className="w-full py-3 bg-white text-black font-medium uppercase text-xs tracking-widest hover:bg-neutral-200">Select a Model</button>
+                                <button onClick={() => router.push('/locations')} className="w-full py-3 border border-white/20 hover:bg-white/5 uppercase text-xs tracking-widest transition-colors">Select a Location</button>
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-foreground/60">One-time price</span>
-                                <span>${model.price_usd_min.toLocaleString()}–${model.price_usd_max.toLocaleString()}</span>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Add-ons */}
-                <div className="space-y-3">
-                    <h2 className="text-lg text-foreground/60">Add-ons (optional)</h2>
-                    <div className="space-y-2">
-                        {addons.map((addon) => (
-                            <button
-                                key={addon.id}
-                                onClick={() => toggleAddon(addon.id)}
-                                className={`w-full p-6 border text-left transition-colors ${selectedAddons.has(addon.id)
-                                    ? 'border-accent bg-accent/5'
-                                    : 'border-border hover:border-accent/50'
-                                    }`}
-                            >
-                                <div className="flex justify-between items-start">
-                                    <div className="flex-1">
-                                        <div className="font-medium">{addon.name}</div>
-                                        <div className="text-sm text-foreground/60 mt-1">{addon.description}</div>
-                                    </div>
-                                    <div className="text-right ml-4">
-                                        <div className="text-foreground/60 text-xs">One-time</div>
-                                        <div className="font-medium">${addon.price_usd.toLocaleString()}</div>
-                                    </div>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Pricing summary */}
-                <div className="pt-8 border-t border-border space-y-4">
-                    <div className="flex justify-between text-lg">
-                        <span className="text-foreground/60">One-time total</span>
-                        <span className="font-medium">${calculateTotal().toLocaleString()}</span>
-                    </div>
-                    {plot && (
-                        <div className="flex justify-between text-lg">
-                            <span className="text-foreground/60">Yearly usage fee</span>
-                            <span className="font-medium">${plot.yearly_fee_usd.toLocaleString()}</span>
                         </div>
                     )}
-                    <p className="text-sm text-foreground/60 pt-4">
-                        This is ownership, not a rental. The yearly fee covers land usage rights.
-                    </p>
+
+                    {/* Model Selection Card */}
+                    {model && (
+                        <div className="space-y-4">
+                            <h2 className="text-xs uppercase tracking-widest text-accent">Selected Model</h2>
+                            <div className="group border border-white/10 bg-white/5 overflow-hidden hover:border-accent/40 transition-colors rounded-sm">
+                                <div className="aspect-video relative bg-black/50">
+                                    {/* Try to show first image, else fallback */}
+                                    {getModelImage(model) ? (
+                                        <img src={getModelImage(model)!} alt={model.name} className="object-cover w-full h-full" />
+                                    ) : (
+                                        <div className="absolute inset-0 flex items-center justify-center text-white/20">No Preview Available</div>
+                                    )}
+                                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+                                        <h3 className="text-xl font-medium text-white">{model.name}</h3>
+                                        <p className="text-sm text-white/70">{model.size_sqm_min}m²</p>
+                                    </div>
+                                </div>
+                                <div className="p-4 flex justify-between items-center text-sm">
+                                    <span className="text-foreground/60">Base Config</span>
+                                    <span className="font-mono">${model.price_usd_min.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Plot Selection Card */}
+                    {plot && (
+                        <div className="space-y-4">
+                            <h2 className="text-xs uppercase tracking-widest text-accent">Selected Location</h2>
+                            <div className="border border-white/10 bg-white/5 p-6 rounded-sm flex justify-between items-center">
+                                <div>
+                                    <h3 className="font-medium text-lg">{plot.location?.name || 'Unknown Location'}</h3>
+                                    <p className="text-sm text-foreground/60">Plot {plot.plot_number}</p>
+                                </div>
+                                <div className="text-right">
+                                    <span className="block font-mono text-lg">${plot.yearly_fee_usd.toLocaleString()}<span className="text-xs text-foreground/40">/yr</span></span>
+                                    <span className="text-xs text-accent">Available Now</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Add-ons Selection */}
+                    <div className="space-y-4">
+                        <div className="flex justify-between items-end">
+                            <h2 className="text-xs uppercase tracking-widest text-accent">Add-ons</h2>
+                            <span className="text-xs text-foreground/40">{selectedAddons.size} selected</span>
+                        </div>
+                        <div className="grid gap-3">
+                            {addons.map((addon) => (
+                                <button
+                                    key={addon.id}
+                                    onClick={() => toggleAddon(addon.id)}
+                                    className={`relative p-4 border text-left transition-all duration-300 rounded-sm group ${selectedAddons.has(addon.id)
+                                        ? 'border-accent bg-accent/10'
+                                        : 'border-white/10 bg-white/5 hover:border-white/30'
+                                        }`}
+                                >
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <div className="font-medium flex items-center gap-2">
+                                                {addon.name}
+                                                {selectedAddons.has(addon.id) && <span className="text-xs text-accent">✓</span>}
+                                            </div>
+                                            <p className="text-xs text-foreground/50 mt-1 max-w-[80%]">{addon.description}</p>
+                                        </div>
+                                        <div className="font-mono text-sm">
+                                            +${addon.price_usd.toLocaleString()}
+                                        </div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
-                {/* CTA */}
-                <div className="pt-8">
-                    <button
-                        onClick={handleReserve}
-                        disabled={submitting}
-                        className="px-8 py-4 bg-accent text-foreground hover:bg-accent/90 transition-colors disabled:opacity-50"
-                    >
-                        {submitting ? 'Processing...' : 'Reserve'}
-                    </button>
+                {/* RIGHT COL: Summary & Payment */}
+                <div className="lg:pl-12">
+                    <div className="sticky top-24 space-y-8 bg-neutral-900/50 p-8 border border-white/5 rounded-sm backdrop-blur-sm">
+                        <h2 className="text-xl font-light border-b border-white/10 pb-4">Order Summary</h2>
+
+                        <div className="space-y-3 text-sm">
+                            <div className="flex justify-between text-foreground/70">
+                                <span>Base Model ({model?.name})</span>
+                                <span>${(model?.price_usd_min || 0).toLocaleString()}</span>
+                            </div>
+                            {Array.from(selectedAddons).map(id => {
+                                const addon = addons.find(a => a.id === id);
+                                if (!addon) return null;
+                                return (
+                                    <div key={id} className="flex justify-between text-foreground/70">
+                                        <span>{addon.name}</span>
+                                        <span>+${addon.price_usd.toLocaleString()}</span>
+                                    </div>
+                                );
+                            })}
+                            <div className="pt-4 border-t border-white/10 flex justify-between text-lg font-medium text-white">
+                                <span>Total Estimate</span>
+                                <span>${calculateTotal().toLocaleString()}</span>
+                            </div>
+                            {plot && (
+                                <div className="flex justify-between text-xs text-foreground/50 pt-1">
+                                    <span>Recurring Land Lease</span>
+                                    <span>${plot.yearly_fee_usd.toLocaleString()}/yr</span>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="space-y-4 pt-4">
+                            <div className="bg-accent/10 border border-accent/20 p-4 rounded text-xs text-accent">
+                                <p className="font-bold mb-1">Refundable Deposit</p>
+                                <p>To secure your production slot, a fully refundable deposit of $1,000 is required today. The remaining balance is due upon manufacturing start.</p>
+                            </div>
+
+                            <button
+                                onClick={handleReserve}
+                                disabled={submitting}
+                                className="w-full py-4 bg-white text-black font-medium tracking-wide hover:bg-neutral-200 transition-colors disabled:opacity-50 text-sm uppercase"
+                            >
+                                {submitting ? 'Processing...' : 'Secure & Pay $1,000'}
+                            </button>
+
+                            <p className="text-center text-xs text-foreground/30">
+                                Secure checkout via Stripe. Encrypted & Safe.
+                            </p>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </main>
     );
@@ -237,7 +313,7 @@ function ReservationContent() {
 
 export default function ReservationPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading reservation...</div>}>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-neutral-950 text-white">Loading reservation...</div>}>
             <ReservationContent />
         </Suspense>
     );

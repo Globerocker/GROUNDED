@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: '/admin/',
         },
-        sitemap: 'https://grounded.com/sitemap.xml',
+        sitemap: 'https://grounded-living.com/sitemap.xml',
     }
 }

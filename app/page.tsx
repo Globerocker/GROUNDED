@@ -13,6 +13,7 @@ import {
     Wifi
 } from 'lucide-react';
 import FAQSection from '@/components/grounded/FAQSection';
+import BeforeAfterSlider from '@/components/grounded/BeforeAfterSlider';
 
 export default function Home() {
     const containerRef = useRef(null);
@@ -77,7 +78,23 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 3. The Narrative: Why Own? */}
+            {/* 3. The Transformation: Before / After (NEW) */}
+            <section className="py-24 px-8 max-w-7xl mx-auto space-y-12">
+                <div className="text-center max-w-2xl mx-auto space-y-4">
+                    <h2 className="text-sm tracking-widest text-accent uppercase">The Transformation</h2>
+                    <h3 className="text-3xl md:text-5xl font-light">From Raw Land<br />to Sovereign Asset.</h3>
+                </div>
+                <div className="max-w-5xl mx-auto shadow-2xl border border-white/10 rounded-sm">
+                    <BeforeAfterSlider
+                        beforeImage="/premium_desert_hero_1769977835499.png" // Reusing hero for raw land feel
+                        afterImage="/settlement_aerial_forest_1769977872697.png" // Developed look
+                        beforeLabel="Raw Territory"
+                        afterLabel="Developed Infrastructure"
+                    />
+                </div>
+            </section>
+
+            {/* 4. The Narrative: Why Own? */}
             <section className="py-32 px-8 max-w-7xl mx-auto">
                 <div className="grid md:grid-cols-2 gap-16 items-center">
                     <div className="space-y-12">
@@ -121,7 +138,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 4. The Product: Logistics & Modularity - NEW */}
+            {/* 5. The Product: Logistics & Modularity - NEW */}
             <section className="py-32 bg-neutral-900 text-white relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-2 gap-24 items-center">
                     <div className="order-2 md:order-1 relative aspect-[4/3] rounded-lg overflow-hidden shadow-2xl border border-white/10">
@@ -159,7 +176,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 5. The Vision: Settlement - NEW */}
+            {/* 6. The Vision: Settlement - NEW */}
             <section className="relative h-[80vh] flex items-center justify-center bg-neutral-950">
                 <div className="absolute inset-0 z-0 opacity-80">
                     {/* Use generated Settlement Image */}
@@ -185,7 +202,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 6. Models Showcase */}
+            {/* 7. Models Showcase */}
             <section className="py-32 bg-foreground/5 relative">
                 <div className="px-8 max-w-7xl mx-auto mb-16 flex justify-between items-end">
                     <div>
@@ -224,7 +241,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 7. Integration Grid - NEW */}
+            {/* 8. Integration Grid - NEW */}
             <section className="py-24 px-8 border-t border-white/5 bg-neutral-900/30">
                 <div className="max-w-7xl mx-auto text-center space-y-16">
                     <h2 className="text-3xl font-light">Full-Stack Autonomy</h2>
@@ -245,10 +262,10 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 8. FAQs */}
+            {/* 9. FAQs */}
             <FAQSection />
 
-            {/* 9. Call to Action */}
+            {/* 10. Call to Action */}
             <section className="py-32 px-8 relative overflow-hidden bg-white text-black">
                 <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
                     <h2 className="text-5xl md:text-7xl font-light tracking-tighter">Join the network.</h2>
