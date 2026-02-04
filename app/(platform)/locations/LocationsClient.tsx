@@ -127,7 +127,7 @@ export default function LocationsClient({ locations: initialLocations }: Locatio
             .eq('status', 'available')
             .order('plot_number');
 
-        if (!error && data) {
+        if (!error && (data && data.length > 0)) {
             // Mock coordinates if missing (Deterministic based on ID)
             const plotsWithCoords = data.map((plot: any) => {
                 if (plot.coordinates) return plot;
@@ -143,6 +143,22 @@ export default function LocationsClient({ locations: initialLocations }: Locatio
                 };
             });
             setPlots(plotsWithCoords);
+        } else if (location.id.startsWith('loc_')) {
+            // Inject Mock Plots for Clientside Locations
+            const mockPlots = Array.from({ length: 3 }).map((_, i) => ({
+                id: `${location.id}_plot_${i + 1}`,
+                plot_number: `${location.airport_code}-${10 + i}`,
+                size_sqm: 500 + i * 150,
+                yearly_fee_usd: location.yearly_fee_usd_min + (i * 2000),
+                status: 'available',
+                coordinates: {
+                    lat: location.coordinates.lat + (Math.random() * 0.002 - 0.001),
+                    lng: location.coordinates.lng + (Math.random() * 0.002 - 0.001)
+                }
+            }));
+            setPlots(mockPlots as any);
+        } else {
+            setPlots([]);
         }
         setLoading(false);
     };
