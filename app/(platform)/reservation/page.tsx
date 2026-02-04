@@ -43,6 +43,7 @@ function ReservationContent() {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const [notes, setNotes] = useState('');
 
     useEffect(() => {
         setMounted(true);
@@ -64,12 +65,24 @@ function ReservationContent() {
 
             // Fetch model
             if (model_id) {
-                const { data } = await supabase
-                    .from('house_models')
-                    .select('*')
-                    .eq('id', model_id)
-                    .single();
-                if (data) setModel(data);
+                if (model_id === 'custom') {
+                    setModel({
+                        id: 'custom',
+                        name: 'Custom Project / BYO',
+                        price_usd_min: 0,
+                        price_usd_max: 0,
+                        size_sqm_min: 0,
+                        bedrooms: 0,
+                        images: [] // Will fallback to empty/custom logic
+                    });
+                } else {
+                    const { data } = await supabase
+                        .from('house_models')
+                        .select('*')
+                        .eq('id', model_id)
+                        .single();
+                    if (data) setModel(data);
+                }
             }
 
             // Fetch addons
@@ -226,30 +239,59 @@ function ReservationContent() {
                             <span className="text-xs text-foreground/40">{selectedAddons.size} selected</span>
                         </div>
                         <div className="grid gap-3">
-                            {addons.map((addon) => (
-                                <button
-                                    key={addon.id}
-                                    onClick={() => toggleAddon(addon.id)}
-                                    className={`relative p-4 border text-left transition-all duration-300 rounded-sm group ${selectedAddons.has(addon.id)
-                                        ? 'border-accent bg-accent/10'
-                                        : 'border-white/10 bg-white/5 hover:border-white/30'
-                                        }`}
-                                >
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <div className="font-medium flex items-center gap-2">
-                                                {addon.name}
-                                                {selectedAddons.has(addon.id) && <span className="text-xs text-accent">✓</span>}
+                            {addons.map((addon) => {
+                                let imageSrc = null;
+                                if (addon.name.toLowerCase().includes('gym')) imageSrc = '/gym_module_exterior_1770232602932.png';
+                                if (addon.name.toLowerCase().includes('sauna')) imageSrc = '/sauna_module_exterior_1770232574541.png';
+                                if (addon.name.toLowerCase().includes('plunge') || addon.name.toLowerCase().includes('ice')) imageSrc = '/ice_bath_module_exterior_1770232588613.png';
+
+                                return (
+                                    <button
+                                        key={addon.id}
+                                        onClick={() => toggleAddon(addon.id)}
+                                        className={`relative border text-left transition-all duration-300 rounded-sm group overflow-hidden ${selectedAddons.has(addon.id)
+                                            ? 'border-accent bg-accent/5'
+                                            : 'border-white/10 bg-white/5 hover:border-white/30'
+                                            }`}
+                                    >
+                                        <div className="flex h-24">
+                                            <div className="w-24 relative shrink-0">
+                                                {imageSrc ? (
+                                                    <img src={imageSrc} alt={addon.name} className="object-cover w-full h-full" />
+                                                ) : (
+                                                    <div className="w-full h-full bg-neutral-800 flex items-center justify-center text-white/20 text-xs">No Img</div>
+                                                )}
+                                                {selectedAddons.has(addon.id) && (
+                                                    <div className="absolute inset-0 bg-accent/20 flex items-center justify-center">
+                                                        <div className="bg-accent text-black rounded-full p-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <p className="text-xs text-foreground/50 mt-1 max-w-[80%]">{addon.description}</p>
+                                            <div className="p-3 flex flex-col justify-between grow">
+                                                <div className="flex justify-between items-start">
+                                                    <span className="font-medium text-sm">{addon.name}</span>
+                                                    <span className="font-mono text-xs text-accent">+${addon.price_usd.toLocaleString()}</span>
+                                                </div>
+                                                <p className="text-xs text-foreground/50 line-clamp-2">{addon.description}</p>
+                                            </div>
                                         </div>
-                                        <div className="font-mono text-sm">
-                                            +${addon.price_usd.toLocaleString()}
-                                        </div>
-                                    </div>
-                                </button>
-                            ))}
+                                    </button>
+                                );
+                            })}
                         </div>
+                    </div>
+
+                    {/* Notes Field */}
+                    <div className="space-y-4">
+                        <h2 className="text-xs uppercase tracking-widest text-accent">Questions / Notes</h2>
+                        <textarea
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                            placeholder="Any specific requirements or questions for our team?"
+                            className="w-full bg-white/5 border border-white/10 p-4 rounded-sm outline-none focus:border-accent text-sm min-h-[100px]"
+                        />
                     </div>
                 </div>
 
@@ -296,7 +338,7 @@ function ReservationContent() {
                                 disabled={submitting}
                                 className="w-full py-4 bg-white text-black font-medium tracking-wide hover:bg-neutral-200 transition-colors disabled:opacity-50 text-sm uppercase"
                             >
-                                {submitting ? 'Processing...' : 'Secure & Pay $1,000'}
+                                {submitting ? 'Processing...' : 'Request Reservation'}
                             </button>
 
                             <p className="text-center text-xs text-foreground/30">

@@ -10,29 +10,29 @@ const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' })
 
 export const metadata: Metadata = {
     title: {
-        template: '%s | Grounded',
-        default: 'Grounded | The Hardware of Living',
+        template: '%s | Fallback Home',
+        default: 'Fallback Home | Strategic Infrastructure',
     },
-    description: 'Autonomous living infrastructure for the sovereign individual. Precision-engineered, off-grid, and globally deployable.',
-    keywords: ['prefab homes', 'off-grid living', 'autonomous housing', 'modern architecture', 'luxury cabin'],
+    description: 'Autonomous living infrastructure for the sovereign individual. Choose your location, choose your home, choose your add-ons. Off-grid, resilient, and secure.',
+    keywords: ['fallback home', 'off-grid living', 'autonomous housing', 'bunker alternative', 'resilient infrastructure'],
     openGraph: {
         type: 'website',
         locale: 'en_US',
-        url: 'https://grounded-living.com',
-        siteName: 'Grounded',
+        url: 'https://fallback-home.com',
+        siteName: 'Fallback Home',
         images: [
             {
                 url: '/settlement_aerial_forest_1769977872697.png',
                 width: 1200,
                 height: 630,
-                alt: 'Grounded Settlement',
+                alt: 'Fallback Home Settlement',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        site: '@grounded_living',
-        creator: '@grounded_living',
+        site: '@fallback_home',
+        creator: '@fallback_home',
     },
 }
 

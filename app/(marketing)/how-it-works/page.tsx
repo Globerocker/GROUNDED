@@ -47,36 +47,18 @@ export default function HowItWorksPage() {
                     </p>
                 </div>
 
-                {/* Steps Timeline */}
-                <div className="relative">
-                    {/* Connecting Line (Desktop) */}
-                    <div className="hidden md:block absolute top-12 left-0 right-0 h-0.5 bg-gradient-to-r from-accent/0 via-accent/50 to-accent/0" />
-
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-                        {steps.map((step) => (
-                            <div key={step.id} className="relative group">
-                                <div className="hidden md:flex items-center justify-center w-24 h-24 bg-neutral-900 border border-border rounded-full mx-auto mb-8 relative z-10 group-hover:border-accent transition-colors">
-                                    <step.icon className={`w-10 h-10 ${step.color}`} />
-                                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-accent text-neutral-900 rounded-full flex items-center justify-center font-bold text-sm">
-                                        {step.id}
-                                    </div>
-                                </div>
-
-                                {/* Mobile Layout */}
-                                <div className="md:hidden flex items-center space-x-4 mb-4">
-                                    <div className="flex items-center justify-center w-16 h-16 bg-neutral-900 border border-border rounded-full shrink-0">
-                                        <step.icon className={`w-6 h-6 ${step.color}`} />
-                                    </div>
-                                    <h3 className="text-2xl font-medium">{step.title}</h3>
-                                </div>
-
-                                <div className="text-center md:text-center pl-20 md:pl-0">
-                                    <h3 className="hidden md:block text-2xl font-medium mb-4">{step.title}</h3>
-                                    <p className="text-foreground/70 leading-relaxed">{step.desc}</p>
-                                </div>
+                {/* Steps Blocks */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {steps.map((step) => (
+                        <div key={step.id} className="group bg-neutral-900/50 border border-white/10 p-8 rounded-sm hover:border-accent/50 hover:bg-neutral-900 transition-all duration-300">
+                            <div className="flex justify-between items-start mb-6">
+                                <step.icon className={`w-10 h-10 ${step.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
+                                <span className="text-5xl font-thin text-white/5 group-hover:text-white/10 transition-colors font-mono">0{step.id}</span>
                             </div>
-                        ))}
-                    </div>
+                            <h3 className="text-lg font-medium mb-3 text-white">{step.title}</h3>
+                            <p className="text-sm text-foreground/60 leading-relaxed">{step.desc}</p>
+                        </div>
+                    ))}
                 </div>
 
                 {/* Detailed Breakdown */}

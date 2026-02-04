@@ -27,8 +27,8 @@ export default function Header() {
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
             <nav className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
-                <Link href="/" className="text-xl font-medium hover:text-accent transition-colors z-50">
-                    Grounded
+                <Link href="/" className="relative h-8 w-40 z-50">
+                    <img src="/fallback_logo_header.png" alt="Fallback Home" className="object-contain h-full w-full invert dark:invert-0" />
                 </Link>
 
                 {/* Desktop Nav */}

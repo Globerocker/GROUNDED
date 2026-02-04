@@ -19,7 +19,7 @@ export interface HouseModel {
     materials: string[];
 }
 
-export default function ModelDetail({ model }: { model: HouseModel }) {
+export default function ModelDetail({ model, plotId }: { model: HouseModel, plotId?: string }) {
     // Mock floor plan if not in DB images
     const getFloorPlan = (name: string) => {
         if (name.includes('Model A')) return '/images/models_floorplan_a_1769886179707.png';
@@ -271,11 +271,18 @@ export default function ModelDetail({ model }: { model: HouseModel }) {
                         {model.description}
                     </p>
 
-                    <ROICalculator basePrice={model.price_usd_min} />
+                    <div className="bg-white/5 border border-white/10 p-6 rounded-sm space-y-2">
+                        <div className="text-xs uppercase tracking-widest text-accent">Investment Potential</div>
+                        <div className="flex justify-between items-baseline">
+                            <span className="text-foreground/70">Estimated Annual Yield</span>
+                            <span className="text-xl font-light text-white">8 - 12%</span>
+                        </div>
+                        <p className="text-xs text-foreground/40 mt-2">Based on 65% occupancy in similar markets.</p>
+                    </div>
 
                     <div className="space-y-4 pt-6">
                         <Link
-                            href={`/reservation?model_id=${model.id}`}
+                            href={plotId ? `/reservation?model_id=${model.id}&plot_id=${plotId}` : `/reservation?model_id=${model.id}`}
                             className="block w-full text-center py-5 bg-foreground text-background text-lg uppercase tracking-widest hover:bg-white/90 transition-colors"
                         >
                             Reserve Now

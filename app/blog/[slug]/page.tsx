@@ -6,11 +6,21 @@ import { format } from 'date-fns';
 import { ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Metadata } from 'next';
+import { BLOG_CONTENT } from '@/lib/blog-content';
 
 // Generate dynamic metadata
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const supabase = await createClient();
+
+    // Check custom content first
+    const extendedPost = (BLOG_CONTENT as any)[slug];
+    if (extendedPost) {
+        return {
+            title: `${extendedPost.title} | Grounded Journal`,
+            description: extendedPost.excerpt,
+        };
+    }
 
     const { data: post } = await supabase
         .from('posts')
@@ -30,7 +40,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     const { slug } = await params;
     const supabase = await createClient();
 
-    const { data: post } = await supabase
+    let post: any = null;
+
+    // 1. Try to fetch from Supabase first (for existing structure/author/image data)
+    const { data: dbPost } = await supabase
         .from('posts')
         .select(`
             *,
@@ -40,89 +53,40 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         .eq('slug', slug)
         .single();
 
+    if (dbPost) {
+        post = dbPost;
+    }
+
+    // 2. Check for "Premium Content" override from our file
+    const extendedPost = (BLOG_CONTENT as any)[slug];
+
+    if (extendedPost) {
+        if (!post) {
+            // Mock post if it doesn't exist in DB
+            post = {
+                slug,
+                title: extendedPost.title,
+                content: extendedPost.content,
+                excerpt: extendedPost.excerpt,
+                published_at: new Date().toISOString(),
+                reading_time_minutes: 10,
+                author: { name: 'Grounded Team', role: 'Editorial' },
+                category: { name: 'Deep Dive', slug: 'deep-dive' }
+            };
+        } else {
+            // Override DB content with file content
+            post.content = extendedPost.content;
+            post.title = extendedPost.title;
+            post.excerpt = extendedPost.excerpt;
+        }
+    }
+
     if (!post) {
         notFound();
     }
 
-    // GROUNDED: Inject extended content for "Million Dollar" feel (Mocking CMS expansion)
-    const EXTENDED_CONTENT: Record<string, string> = {
-        'future-of-housing-infrastructure': `
-# The Hardware of Living
-
-We are witnessing a fundamental shift in how humanity inhabits the planet. For centuries, "housing" has been defined by static, site-built structures—heavy, permanent, and inefficient. We pour concrete into the earth, creating assets that are immovable and slow to adapt. 
-
-At Grounded, we believe housing is not a static asset, but a dynamic **infrastructure**. 
-
-## The Teslafication of the Home
-
-Just as the automotive industry shifted from combustion engines to software-defined electric platforms, the housing industry is undergoing a similar metamorphosis. We are moving from "stick-built" to "assembled."
-
-> "The home of the future is not built; it is manufactured, deployed, and updated."
-
-Our flagship models are not just buildings; they are high-performance machines for living. Precision-engineered in controlled factory environments, they rival the tolerance levels of the aerospace industry. This isn't just about pre-fab; it's about **productizing the living environment**.
-
-### Decoupling Land and Structure
-
-The traditional real estate model bundles land and improvements into a single, expensive asset. We are decoupling them. 
-1.  **The Land:** A network of premium, curated locations (The Grid) that you access via subscription.
-2.  **The Unit:** A depreciating asset that you own, upgrade, and move.
-
-This model allows for a level of freedom previously impossible. Own the hardware, rent the view. Move your home from the cliffs of Big Sur to the deserts of Utah without selling a single brick.
-
-## Engineering Autonomy
-
-True freedom requires autonomy. Our units are designed to operate off-grid for extended periods without sacrificing luxury.
-*   **Energy:** Integrated solar arrays and Tesla Powerwall storage.
-*   **Water:** Atmospheric water generation and closed-loop greywater recycling.
-*   **Connectivity:** Starlink high-speed satellite internet baked into the chassis.
-
-We are building the infrastructure for a sovereign life. A life where you are connected to the world but not dependent on its aging utilities.
-
-## The Design Philosophy: Invisible Tech
-
-Technology should be felt, not seen. Our interiors are finished with natural materials—Venetian plaster, raw oak, stone—that hide the advanced systems beneath. Voice-controlled lighting, automated climate regulation, and health-monitoring sensors work in the background to optimize your environment.
-
-This is the future we are building. A future where your home is as smart as your phone, as mobile as your car, and as beautiful as the nature it sits within.
-        `,
-        'sustainable-luxury-living': `
-# Redefining Luxury: The Etiquette of Ecology
-
-Luxury has historically been synonymous with excess. Large footprints, wasteful materials, and high energy consumption. We are rewriting this definition. True sustainable luxury is about **precision, harmony, and health**.
-
-## Small Footprint, Massive Impact
-
-Our units are compact by design, but expansive in experience. By reducing the conditioned square footage, we drastically lower the carbon footprint of daily living. But we don't sacrifice quality.
-Every square meter is considered. High ceilings, floor-to-ceiling glazing, and seamless indoor-outdoor flows expand the perceived space.
-
-*   **Thermal Mass:** Using high-density insulation and materials that regulate temperature naturally.
-*   **Passive Interaction:** Orienting units to maximize solar gain in winter and shade in summer.
-
-## Biophilic Design
-
-We don't just place a house in nature; we invite nature in. 
-Studies show that connection to nature lowers cortisol levels and improves cognitive function. Our "Glass House" philosophy ensures that you are always visually connected to your surroundings.
-
-> "We shape our buildings; thereafter they shape us." — Winston Churchill
-
-We are shaping buildings that heal. Natural light, circadian lighting systems, and non-toxic, organic finishes create a sanctuary for the body and mind.
-
-## The Materials Palette
-
-We reject plastics and faux-finishes.
-*   **Exterior:** Shou Sugi Ban (charred timber) or Viroc (cement composite) – durable, beautiful, aging with grace.
-*   **Interior:** Clay paints that breathe, regulating humidity. Stone floors that ground you.
-
-Sustainable luxury is not about what you have; it's about how you live. It is a conscious choice to live lighter, smarter, and more beautifully.
-        `
-    };
-
-    // Override content if we have an enhanced version
-    if (slug in EXTENDED_CONTENT) {
-        post.content = EXTENDED_CONTENT[slug];
-    }
-
     return (
-        <main className="min-h-screen bg-background">
+        <main className="min-h-screen bg-background text-foreground">
             {/* Hero Image */}
             <div className="relative h-[60vh] w-full">
                 {post.cover_image ? (
@@ -134,7 +98,9 @@ Sustainable luxury is not about what you have; it's about how you live. It is a 
                         priority
                     />
                 ) : (
-                    <div className="w-full h-full bg-neutral-900" />
+                    <div className="w-full h-full bg-neutral-900 flex items-center justify-center">
+                        <span className="text-white/10 text-9xl font-thin tracking-tighter">GROUNDED</span>
+                    </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
 
@@ -189,7 +155,32 @@ Sustainable luxury is not about what you have; it's about how you live. It is a 
 
                 {/* Markdown Content */}
                 <div className="prose prose-invert prose-lg max-w-none prose-headings:font-light prose-headings:tracking-tight prose-a:text-accent prose-img:rounded-xl">
-                    <ReactMarkdown>{post.content || ''}</ReactMarkdown>
+                    <ReactMarkdown
+                        components={{
+                            h2: ({ node, ...props }) => <h2 className="text-3xl font-light mt-12 mb-6 text-white border-l-2 border-accent pl-6" {...props} />,
+                            h3: ({ node, ...props }) => <h3 className="text-xl font-medium mt-8 mb-4 text-white/90" {...props} />,
+                            p: ({ node, ...props }) => <p className="text-lg leading-relaxed text-neutral-400 mb-6" {...props} />,
+                            ul: ({ node, ...props }) => <ul className="space-y-4 my-8 pl-6 border-l border-white/10" {...props} />,
+                            li: ({ node, ...props }) => (
+                                <li className="text-neutral-300 pl-4 relative list-none" {...props}>
+                                    <span className="absolute left-0 top-3 w-1.5 h-1.5 bg-accent rounded-full" />
+                                    {props.children}
+                                </li>
+                            ),
+                            blockquote: ({ node, ...props }: any) => (
+                                <div className="my-12 p-8 border-l-4 border-accent bg-white/5 italic text-xl md:text-2xl font-light text-white/90 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl font-serif">"</div>
+                                    <div {...props} />
+                                </div>
+                            ),
+                            a: ({ node, ...props }) => (
+                                <a className="text-accent hover:text-white transition-colors border-b border-accent/20 hover:border-accent pb-0.5" {...props} />
+                            ),
+                            strong: ({ node, ...props }) => <strong className="font-semibold text-white/90" {...props} />,
+                        }}
+                    >
+                        {post.content || ''}
+                    </ReactMarkdown>
                 </div>
 
             </article>

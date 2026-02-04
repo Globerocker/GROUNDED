@@ -34,7 +34,7 @@ export default async function ModelsPage({ searchParams }: ModelsPageProps) {
                     </div>
                 </div>
 
-                {models && <ModelsList models={models} />}
+                {models && <ModelsList models={models} plotId={plot_id} />}
             </div>
         </main>
     );

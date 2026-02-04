@@ -51,7 +51,7 @@ export default function Home() {
                         transition={{ duration: 1, delay: 0.2 }}
                         className="text-6xl md:text-8xl font-light tracking-tighter text-white"
                     >
-                        Own your fallback.
+                        Your Fallback Home.
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -59,7 +59,7 @@ export default function Home() {
                         transition={{ duration: 1, delay: 0.4 }}
                         className="text-xl md:text-2xl font-light text-white/80 max-w-2xl mx-auto"
                     >
-                        Permanent infrastructure outside fragile systems.
+                        Strategic Infrastructure. Choose your location, select your home, and add premium modules. Permanent peace of mind.
                     </motion.p>
                 </div>
 
@@ -207,16 +207,16 @@ export default function Home() {
                 <div className="px-8 max-w-7xl mx-auto mb-16 flex justify-between items-end">
                     <div>
                         <h2 className="text-4xl font-light mb-4">Architecture</h2>
-                        <p className="text-foreground/60 max-w-md">Prefabricated precision. Designed for the landscape, not against it.</p>
+                        <p className="text-foreground/60 max-w-md">Prefabricated precision. Sleep-optimized designs with blackout sanctuaries and strategic glazing.</p>
                     </div>
                     <Link href="/models" className="text-accent hover:text-foreground transition-colors">View all models →</Link>
                 </div>
 
                 <div className="flex overflow-x-auto gap-8 px-8 pb-12 snap-x scrollbar-hide">
                     {[
-                        { name: "Model A", size: "28 sqm", price: "$35k", img: "/interior_virtual_tour_living_1769905432339.png" }, // Use generated interior
-                        { name: "Model B", size: "42 sqm", price: "$55k", img: "/images/interior_bedroom_nature_1769886262067.png" },
-                        { name: "Model C", size: "60 sqm", price: "$75k", img: "/images/landscape_coast_moody_1769886288578.png" }
+                        { name: "Model A", size: "28 sqm", price: "$35k", img: "/images/models/model_a_interior_1769883053783.png" },
+                        { name: "Model B", size: "42 sqm", price: "$55k", img: "/images/models/model_b_interior_1769883084425.png" },
+                        { name: "Model C", size: "60 sqm", price: "$75k", img: "/images/models/model_c_interior_1769883111015.png" }
                     ].map((model, i) => (
                         <motion.div
                             key={i}
@@ -238,6 +238,73 @@ export default function Home() {
                             </Link>
                         </motion.div>
                     ))}
+                </div>
+            </section>
+
+            {/* 7.5. Add-ons Showcase - NEW */}
+            <section className="py-24 bg-neutral-900 text-white border-t border-white/5">
+                <div className="max-w-7xl mx-auto px-8 space-y-12">
+                    <div className="flex justify-between items-end">
+                        <div>
+                            <h2 className="text-4xl font-light mb-4">Premium Modules</h2>
+                            <p className="text-white/60 max-w-md">Customize your fallback with wellness and community infrastructure.</p>
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {[
+                            { name: "Nordic Sauna", img: "/sauna_module_exterior_1770232574541.png" },
+                            { name: "Ice Plunge", img: "/ice_bath_module_exterior_1770232588613.png" },
+                            { name: "Gym Pod", img: "/gym_module_exterior_1770232602932.png" },
+                            { name: "Community Lounge", img: "/community_area_exterior_1770232727120.png" }
+                        ].map((item, i) => (
+                            <div key={i} className="group relative aspect-[4/5] overflow-hidden rounded-sm bg-black/50 border border-white/10">
+                                <Image src={item.img} alt={item.name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                                <div className="absolute bottom-6 left-6">
+                                    <h3 className="text-lg font-light">{item.name}</h3>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 7.6. Map Preview */}
+            <section className="py-24 bg-neutral-950 text-white relative border-t border-white/5">
+                <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center">
+                    <div className="space-y-8">
+                        <h2 className="text-4xl md:text-5xl font-light tracking-tight">Strategic Coordinates.</h2>
+                        <p className="text-xl text-white/60 font-light leading-relaxed">
+                            Discover our network of sovereign production sites and partner locations. From the pine forests of Hidalgo to the turquoise lagoons of Bacalar.
+                        </p>
+                        <ul className="space-y-4 text-sm text-accent font-mono">
+                            <li className="flex items-center gap-3">
+                                <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                                LIVE: Hidalgo Forest Reserve
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                                LIVE: Baja Coastal Station
+                            </li>
+                            <li className="flex items-center gap-3 text-white/50">
+                                <span className="w-2 h-2 bg-white/20 rounded-full" />
+                                SOON: Bacalar Lagoon
+                            </li>
+                        </ul>
+                        <Link href="/locations" className="inline-block mt-8 px-8 py-4 bg-white text-black hover:bg-neutral-200 transition-colors uppercase tracking-widest text-xs rounded-sm">
+                            Open Intelligence Map
+                        </Link>
+                    </div>
+                    <div className="relative aspect-square md:aspect-[4/3] border border-white/10 rounded-sm overflow-hidden group">
+                        <Image
+                            src="/map_preview.png"
+                            alt="Fallback Home Network Map"
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-cyan-500/5 mix-blend-overlay pointer-events-none" />
+                    </div>
                 </div>
             </section>
 

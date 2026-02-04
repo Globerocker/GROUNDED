@@ -17,6 +17,64 @@ interface Location {
     description: string;
 }
 
+const MOCK_EXTRA_LOCATIONS: Location[] = [
+    {
+        id: 'loc_hidalgo',
+        name: 'Hidalgo Forest Reserve',
+        airport_code: 'MEX',
+        coordinates: { lat: 20.21, lng: -98.72 },
+        airport_distance_km_min: 110,
+        airport_distance_km_max: 140,
+        yearly_fee_usd_min: 4200,
+        yearly_fee_usd_max: 7500,
+        description: 'High-altitude pine forest sanctuary. Nutrient-rich soil, dense canopy cover, and natural spring water sources.'
+    },
+    {
+        id: 'loc_baja',
+        name: 'Baja Coastal Station',
+        airport_code: 'SJD',
+        coordinates: { lat: 23.45, lng: -110.20 },
+        airport_distance_km_min: 45,
+        airport_distance_km_max: 60,
+        yearly_fee_usd_min: 15000,
+        yearly_fee_usd_max: 28000,
+        description: 'Where the desert meets the Pacific. Rugged isolation with strategic maritime access and unlimited solar potential.'
+    },
+    {
+        id: 'loc_bacalar',
+        name: 'Bacalar Lagoon Edge',
+        airport_code: 'Chetumal',
+        coordinates: { lat: 18.67, lng: -88.39 },
+        airport_distance_km_min: 30,
+        airport_distance_km_max: 45,
+        yearly_fee_usd_min: 9000,
+        yearly_fee_usd_max: 16000,
+        description: 'Tropical freshwater sanctuary. Permaculture-ready soil adjacent to the Lagoon of Seven Colors.'
+    },
+    {
+        id: 'loc_colima',
+        name: 'Colima Volcano Monitor',
+        airport_code: 'CLQ',
+        coordinates: { lat: 19.24, lng: -103.72 },
+        airport_distance_km_min: 25,
+        airport_distance_km_max: 40,
+        yearly_fee_usd_min: 3500,
+        yearly_fee_usd_max: 6000,
+        description: 'Fertile volcanic soil with high geothermal activity. Ideal for autonomous agriculture and energy independent projects.'
+    },
+    {
+        id: 'loc_veracruz',
+        name: 'Veracruz Logistics Hub',
+        airport_code: 'VER',
+        coordinates: { lat: 19.17, lng: -96.13 },
+        airport_distance_km_min: 15,
+        airport_distance_km_max: 25,
+        yearly_fee_usd_min: 5500,
+        yearly_fee_usd_max: 9500,
+        description: 'Strategic coastal positioning near major port infrastructure. High connectivity for supply chain resilience.'
+    }
+];
+
 interface Plot {
     id: string;
     plot_number: string;
@@ -30,16 +88,23 @@ interface LocationsPageProps {
 }
 
 export default function LocationsClient({ locations: initialLocations }: LocationsPageProps) {
-    // Enrich locations with mock data for "Million Dollar" feel
-    const locations = initialLocations.map(loc => ({
+    // Enrich locations with mock data for "Million Dollar" feel + Merge new locations
+    const allLocations = [...initialLocations, ...MOCK_EXTRA_LOCATIONS];
+
+    const locations = allLocations.map(loc => ({
         ...loc,
         average_temp: loc.name.includes('Queretaro') ? '22°C' :
             loc.name.includes('Merida') ? '28°C' :
                 loc.name.includes('Puebla') ? '20°C' :
-                    loc.name.includes('Guadalajara') ? '24°C' : '23°C',
+                    loc.name.includes('Guadalajara') ? '24°C' :
+                        loc.name.includes('Baja') ? '29°C' :
+                            loc.name.includes('Hidalgo') ? '18°C' : '23°C',
         direct_flights: loc.name.includes('Queretaro') ? ['IAH', 'DFW', 'ORD'] :
             loc.name.includes('Merida') ? ['MIA', 'IAH', 'YYZ'] :
-                loc.name.includes('Guadalajara') ? ['LAX', 'PHX', 'JFK'] : ['MEX', 'IAH']
+                loc.name.includes('Guadalajara') ? ['LAX', 'PHX', 'JFK'] : ['MEX', 'IAH'],
+        image: loc.name.includes('Hidalgo') ? '/locations/hidalgo.png' :
+            loc.name.includes('Bacalar') ? '/locations/bacalar.png' :
+                loc.name.includes('Baja') ? '/locations/baja.png' : null
     }));
     const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
     const [plots, setPlots] = useState<Plot[]>([]);
@@ -145,14 +210,23 @@ export default function LocationsClient({ locations: initialLocations }: Locatio
                             className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl pointer-events-auto"
                         >
                             <div className="relative h-48 bg-neutral-800">
-                                {/* Placeholder for Location Hero - could be dynamic */}
-                                <div className="absolute inset-0 flex items-center justify-center text-white/20">Location Image</div>
+                                {/* Location Hero */}
+                                {(selectedLocation as any).image ? (
+                                    <img
+                                        src={(selectedLocation as any).image}
+                                        alt={selectedLocation.name}
+                                        className="absolute inset-0 w-full h-full object-cover opacity-80"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 flex items-center justify-center text-white/20">Location Image</div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                                 <button
                                     onClick={() => {
                                         setSelectedLocation(null);
                                         setCamera(null); // Optional: Reset camera
                                     }}
-                                    className="absolute top-4 left-4 p-2 bg-black/50 rounded-full hover:bg-black/80 transition-colors"
+                                    className="absolute top-4 left-4 p-2 bg-black/50 rounded-full hover:bg-black/80 transition-colors z-20"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
                                 </button>
@@ -197,11 +271,11 @@ export default function LocationsClient({ locations: initialLocations }: Locatio
                                                             <div className="text-[10px] text-foreground/50">{plot.size_sqm} sqm</div>
                                                         </div>
                                                         <a
-                                                            href={`/reservation?plot_id=${plot.id}`}
-                                                            className="px-3 py-1 bg-accent text-black text-xs font-bold uppercase tracking-wider hover:bg-white transition-colors"
+                                                            href={`/models?plot_id=${plot.id}`}
+                                                            className="px-3 py-1 bg-white text-black text-xs font-bold uppercase tracking-wider hover:bg-neutral-200 transition-colors border border-transparent"
                                                             onClick={(e) => e.stopPropagation()}
                                                         >
-                                                            Reserve
+                                                            Select Model
                                                         </a>
                                                     </div>
                                                 </div>

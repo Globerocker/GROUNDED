@@ -2,8 +2,15 @@ import { createClient } from '@/lib/supabase/server';
 import ModelDetail from '@/components/grounded/ModelDetail';
 import { notFound } from 'next/navigation';
 
-export default async function ModelPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ModelPage({
+    params,
+    searchParams
+}: {
+    params: Promise<{ id: string }>;
+    searchParams: Promise<{ plot_id?: string }>;
+}) {
     const { id } = await params;
+    const { plot_id } = await searchParams;
     const supabase = await createClient();
     const { data: model } = await supabase
         .from('house_models')
@@ -17,7 +24,7 @@ export default async function ModelPage({ params }: { params: Promise<{ id: stri
 
     return (
         <main className="min-h-screen pt-24 px-8 max-w-7xl mx-auto">
-            <ModelDetail model={model} />
+            <ModelDetail model={model} plotId={plot_id} />
         </main>
     );
 }
