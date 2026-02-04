@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Metadata } from 'next';
-import { BLOG_CONTENT } from '@/lib/blog-content';
+import { BLOG_CONTENT } from '../../../lib/blog-content';
 
 // Generate dynamic metadata
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
